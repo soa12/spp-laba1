@@ -1,0 +1,14 @@
+<h1>Logs</h1>
+
+<p><a href="/">Back</a></p>
+
+<table>
+    <tr>
+        <th></th>
+    </tr>
+    <?php foreach ($variables as $log) { ?>
+        <tr>
+            <td><?=rtrim($log, " \r\n\t[]")?></td>
+        </tr>
+    <?php } ?>
+</table>

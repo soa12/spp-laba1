@@ -6,39 +6,24 @@
  * Time: 23:53
  */
 
-$app->get('/',
-    function () {
-        echo 'hi';
-    }
-);
-
-$app->get('/hello/{name}', function ($request, $response, $args) {
-    return $this->view->render($response, 'profile.html', [
-        'name' => $args['name']
-    ]);
-    $this->logger->addInfo('name =' . $args['name']);
-})->setName('profile');
-
-$app->get('/tickets', function ($request, $response) {
-    $this->logger->addInfo('Ticket list');
-    $tickets = array('ticket1' => array(
-        'Title' => 'Title',
-        'Component' => 'Component',
-        'Description' => 'Description',
-        'Actions' => 'Actions',
-    ));
-
-    $response = $this->view->render($response, 'tickets.phtml', ['tickets' => $tickets]);
+$app->get('/', function ($request, $response) {
+    $this->logger->addInfo('Начальная страница');
+    $templateVariables = array('startLabel' => 'Приложение запущено');
+    $response = $this->view->render($response, 'app.phtml', ['variables' => $templateVariables]);
     return $response;
 });
 
-$app->post(
-    '/check', 'DocumentController:check'
-);
+$app->get('/action', function ($request, $response) {
+    $params = $request->getQueryParams();
+    $this->logger->addInfo('Нажата кнопка ' . $params['submit']);
+    $templateVariables = array('startLabel' => $params['submit']);
+    $response = $this->view->render($response, 'app.phtml', ['variables' => $templateVariables]);
+    return $response;
+});
 
-$app->get(
-    '/documents',
-    function () {
-        echo 'doclist';
-    }
-);
+$app->get('/logs', function ($request, $response) {
+    $this->logger->addInfo('Просмотр логов');
+    $logs = file(__DIR__ .'/../../logs/app.log');
+    $response = $this->view->render($response, 'logs.phtml', ['variables' => $logs]);
+    return $response;
+});
